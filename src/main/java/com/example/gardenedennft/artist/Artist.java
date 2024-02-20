@@ -46,7 +46,7 @@ public class Artist extends BaseEntity implements UserDetails {
     @OneToMany(mappedBy = "artist", fetch = FetchType.LAZY)
     private List<Token> tokens;
 
-    @OneToMany(mappedBy = "role")
+    @OneToMany(mappedBy = "artist", fetch = FetchType.LAZY)
     private List<UserRole> userRoles;
 
     @Override
