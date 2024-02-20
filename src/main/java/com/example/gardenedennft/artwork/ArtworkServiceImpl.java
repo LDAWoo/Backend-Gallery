@@ -186,6 +186,8 @@ public class ArtworkServiceImpl implements ArtworkService{
         List<Attribute> attributes = attributeResponse.findAllAttributeByIdArtwork(artwork.getId())
                 .orElseThrow(() -> new ResourceNotFoundException("Not find attributes with artwork ID " + artwork.getId()));
 
+        List<FavoriteArtWorkDTO> favoriteArtWorks = favoriteArtWorkService.findListFavoriteArtworks(artwork.getId());
+
         return ArtworkDTO.builder()
                 .id(artwork.getId())
                 .name(artwork.getName())
@@ -203,6 +205,7 @@ public class ArtworkServiceImpl implements ArtworkService{
                 .owner(ownerDTOMapper.apply(owner))
                 .transaction(transactionDTOMapper.apply(transaction))
                 .attributes(attributeDTOMapper.apply(attributes))
+                .favoriteArtWorks(favoriteArtWorks)
                 .build();
     }
 
@@ -219,13 +222,11 @@ public class ArtworkServiceImpl implements ArtworkService{
                 .orElseThrow(() -> new ResourceNotFoundException("Not find attribute with id artwork"+id));
         List<AttributeDTO> attributesDTO = attributeDTOMapper.apply(attributes);
 
-        List<FavoriteArtWorkDTO> favoriteArtWorks = favoriteArtWorkService.findListFavoriteArtworks(id);
 
         ArtworkTransactionAttributeDTO artworkTransactionAttributeDTO = ArtworkTransactionAttributeDTO.builder()
                 .artwork(artworkDTO)
                 .transaction(transactionDTO)
                 .attributes(attributesDTO)
-                .favoriteArtWorks(favoriteArtWorks)
                 .build();
 
         return artworkTransactionAttributeDTO;
