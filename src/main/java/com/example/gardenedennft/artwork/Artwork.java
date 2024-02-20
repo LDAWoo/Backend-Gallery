@@ -2,8 +2,7 @@ package com.example.gardenedennft.artwork;
 
 import com.example.gardenedennft.attribute.Attribute;
 import com.example.gardenedennft.category.Category;
-import com.example.gardenedennft.constant.SystemConstant;
-import com.example.gardenedennft.favoriteartwork.FavoriteArtwork;
+import com.example.gardenedennft.favoriteartwork.entity.FavoriteArtwork;
 import com.example.gardenedennft.owner.Owner;
 import com.example.gardenedennft.transaction.Transaction;
 import com.fasterxml.jackson.annotation.JsonIgnore;

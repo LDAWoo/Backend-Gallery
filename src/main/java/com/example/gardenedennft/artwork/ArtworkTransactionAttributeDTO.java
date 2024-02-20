@@ -1,6 +1,7 @@
 package com.example.gardenedennft.artwork;
 
 import com.example.gardenedennft.attribute.AttributeDTO;
+import com.example.gardenedennft.favoriteartwork.dto.FavoriteArtWorkDTO;
 import com.example.gardenedennft.transaction.TransactionDTO;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -17,6 +18,7 @@ public class ArtworkTransactionAttributeDTO {
     private ArtworkDTO artwork;
     private TransactionDTO transaction;
     private List<AttributeDTO> attributes;
+    private List<FavoriteArtWorkDTO> favoriteArtWorks;
 }
 
 
