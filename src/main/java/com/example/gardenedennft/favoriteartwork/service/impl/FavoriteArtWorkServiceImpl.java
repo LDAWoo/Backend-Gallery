@@ -37,7 +37,8 @@ public class FavoriteArtWorkServiceImpl implements FavoriteArtWorkService {
     private final OwnerResponse ownerResponse;
 
     @Override
-    public void addFavoriteArtWork(FavoriteArtworkRequest favoriteArtworkRequest) {
+    public FavoriteArtWorkDTO addFavoriteArtWork(FavoriteArtworkRequest favoriteArtworkRequest) {
+
         String currentWalletAddress = favoriteArtworkRequest.getWalletAddress();
         Integer currentIdArtwork = favoriteArtworkRequest.getIdArtwork();
 
@@ -53,7 +54,7 @@ public class FavoriteArtWorkServiceImpl implements FavoriteArtWorkService {
         }else{
             Artwork artwork = artworkResponse.findById(currentIdArtwork).get();
 
-            favoriteArtWorkRepo.save(
+            favoriteArtwork = favoriteArtWorkRepo.save(
                     FavoriteArtwork.builder()
                             .status(true)
                             .artwork(artwork)
@@ -61,6 +62,10 @@ public class FavoriteArtWorkServiceImpl implements FavoriteArtWorkService {
                             .build()
             );
         }
+
+        FavoriteArtWorkDTO favoriteArtWorkDTO = favoriteArtWorkDTOMapper.apply(favoriteArtwork);
+
+        return favoriteArtWorkDTO;
     }
 
     @Override

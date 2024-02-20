@@ -9,7 +9,7 @@ import java.util.UUID;
 
 public interface FavoriteArtWorkService {
 
-    void addFavoriteArtWork(FavoriteArtworkRequest favoriteArtworkRequest);
+    FavoriteArtWorkDTO addFavoriteArtWork(FavoriteArtworkRequest favoriteArtworkRequest);
 
     FavoriteArtwork findFavoriteArtWorkByWalletAddressAndIdArtwork(String walletAddress, Integer idArtwork);
 
