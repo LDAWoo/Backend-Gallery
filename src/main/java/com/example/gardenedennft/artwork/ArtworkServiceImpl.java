@@ -9,6 +9,9 @@ import com.example.gardenedennft.attribute.AttributeDTOMapper;
 import com.example.gardenedennft.attribute.AttributeResponse;
 import com.example.gardenedennft.constant.SystemConstant;
 import com.example.gardenedennft.exception.ResourceNotFoundException;
+import com.example.gardenedennft.favoriteartwork.dto.FavoriteArtWorkDTO;
+import com.example.gardenedennft.favoriteartwork.entity.FavoriteArtwork;
+import com.example.gardenedennft.favoriteartwork.service.FavoriteArtWorkService;
 import com.example.gardenedennft.historycreatenft.HistoryCreateNFTService;
 import com.example.gardenedennft.owner.*;
 import com.example.gardenedennft.transaction.*;
@@ -56,6 +59,7 @@ public class ArtworkServiceImpl implements ArtworkService{
 
     private final ArtworkListDTOMapper artworkListDTOMapper;
 
+    private final FavoriteArtWorkService favoriteArtWorkService;
 
 
     @Transactional
@@ -184,6 +188,8 @@ public class ArtworkServiceImpl implements ArtworkService{
         List<Attribute> attributes = attributeResponse.findAllAttributeByIdArtwork(artwork.getId())
                 .orElseThrow(() -> new ResourceNotFoundException("Not find attributes with artwork ID " + artwork.getId()));
 
+        List<FavoriteArtWorkDTO> favoriteArtWorks = favoriteArtWorkService.findListFavoriteArtworks(artwork.getId());
+
         return ArtworkDTO.builder()
                 .id(artwork.getId())
                 .name(artwork.getName())
@@ -201,6 +207,7 @@ public class ArtworkServiceImpl implements ArtworkService{
                 .owner(ownerDTOMapper.apply(owner))
                 .transaction(transactionDTOMapper.apply(transaction))
                 .attributes(attributeDTOMapper.apply(attributes))
+                .favoriteArtWorks(favoriteArtWorks)
                 .build();
     }
 

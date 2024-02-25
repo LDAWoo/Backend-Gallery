@@ -18,7 +18,6 @@ public class ArtworkTransactionAttributeDTO {
     private ArtworkDTO artwork;
     private TransactionDTO transaction;
     private List<AttributeDTO> attributes;
-    private List<FavoriteArtWorkDTO> favoriteArtWorks;
 }
 
 

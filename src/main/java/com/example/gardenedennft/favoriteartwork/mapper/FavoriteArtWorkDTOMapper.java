@@ -9,15 +9,12 @@ import org.springframework.stereotype.Service;
 import java.util.function.Function;
 
 @Service
+@RequiredArgsConstructor
 public class FavoriteArtWorkDTOMapper implements Function<FavoriteArtwork, FavoriteArtWorkDTO> {
-
+        private  final ModelMapper mapper;
     @Override
     public FavoriteArtWorkDTO apply(FavoriteArtwork favoriteArtwork) {
-        return new FavoriteArtWorkDTO(
-                favoriteArtwork.getWallet_address(),
-                favoriteArtwork.getStatus(),
-                favoriteArtwork.getArtwork().getId()
-                );
+        return mapper.map(favoriteArtwork,FavoriteArtWorkDTO.class);
 
     }
 }

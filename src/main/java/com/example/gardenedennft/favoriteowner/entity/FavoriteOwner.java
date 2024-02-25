@@ -1,4 +1,4 @@
-package com.example.gardenedennft.favoriteowner;
+package com.example.gardenedennft.favoriteowner.entity;
 
 import com.example.gardenedennft.owner.Owner;
 import com.example.gardenedennft.utils.BaseEntity;

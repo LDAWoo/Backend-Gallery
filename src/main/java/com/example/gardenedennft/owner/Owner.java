@@ -2,7 +2,7 @@ package com.example.gardenedennft.owner;
 
 import com.example.gardenedennft.artist.Artist;
 import com.example.gardenedennft.artwork.Artwork;
-import com.example.gardenedennft.favoriteowner.FavoriteOwner;
+import com.example.gardenedennft.favoriteowner.entity.FavoriteOwner;
 import com.example.gardenedennft.utils.BaseEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
