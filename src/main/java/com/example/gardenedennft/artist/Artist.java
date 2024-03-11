@@ -1,6 +1,7 @@
 package com.example.gardenedennft.artist;
 
 
+import com.example.gardenedennft.favoriteartist.entity.FavoriteArtist;
 import com.example.gardenedennft.owner.Owner;
 import com.example.gardenedennft.token.Token;
 import com.example.gardenedennft.userrole.UserRole;
@@ -48,6 +49,9 @@ public class Artist extends BaseEntity implements UserDetails {
 
     @OneToMany(mappedBy = "artist", fetch = FetchType.LAZY)
     private List<UserRole> userRoles;
+
+    @OneToMany(mappedBy = "artist", fetch = FetchType.LAZY)
+    private List<FavoriteArtist> favoriteArtists;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

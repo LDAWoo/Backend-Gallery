@@ -1,6 +1,6 @@
-package com.example.gardenedennft.favoriteowner.entity;
+package com.example.gardenedennft.favoriteartist.entity;
 
-import com.example.gardenedennft.owner.Owner;
+import com.example.gardenedennft.artist.Artist;
 import com.example.gardenedennft.utils.BaseEntity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
@@ -16,13 +16,12 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@Table(name = "_favoriteOwner")
-public class FavoriteOwner extends BaseEntity {
+@Table(name = "_favoriteArtist")
+public class FavoriteArtist extends BaseEntity {
     private String wallet_address;
     private Boolean status;
-
     @ManyToOne
-    @JoinColumn(name = "id_favoriteOwner")
-    private Owner owner;
+    @JoinColumn(name = "id_favoriteArtist")
+    private Artist artist;
 
 }

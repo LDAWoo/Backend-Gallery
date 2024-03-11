@@ -42,17 +42,18 @@ public class FavoriteArtWorkServiceImpl implements FavoriteArtWorkService {
         String currentWalletAddress = favoriteArtworkRequest.getWalletAddress();
         Integer currentIdArtwork = favoriteArtworkRequest.getIdArtwork();
 
-        if(!ownerResponse.existsOwnerByWalletAddress(currentWalletAddress)){
-            throw new ResourceNotFoundException("Not found owner with wallet address "+currentWalletAddress);
+        if (!ownerResponse.existsOwnerByWalletAddress(currentWalletAddress)) {
+            throw new ResourceNotFoundException("Not found owner with wallet address " + currentWalletAddress);
         }
 
         FavoriteArtwork favoriteArtwork = findFavoriteArtWorkByWalletAddressAndIdArtwork(currentWalletAddress, currentIdArtwork);
 
-        if(favoriteArtwork !=null && exitsFavoriteArtworkByWalletAddress(favoriteArtwork.getWallet_address())){
+        if (favoriteArtwork != null) {
             favoriteArtwork.setStatus(!favoriteArtwork.getStatus());
             favoriteArtWorkRepo.save(favoriteArtwork);
-        }else{
-            Artwork artwork = artworkResponse.findById(currentIdArtwork).get();
+        } else {
+            Artwork artwork = artworkResponse.findById(currentIdArtwork)
+                    .orElseThrow(() -> new ResourceNotFoundException("Not found artwork with id " + currentIdArtwork));
 
             favoriteArtwork = favoriteArtWorkRepo.save(
                     FavoriteArtwork.builder()
@@ -82,9 +83,9 @@ public class FavoriteArtWorkServiceImpl implements FavoriteArtWorkService {
 
     @Override
     public List<FavoriteArtWorkDTO> findListFavoriteArtworks(Integer idArtwork) {
-        List<FavoriteArtwork> listfavoriteArtworks = favoriteArtWorkRepo.findListFavoriteArtworksByIdArtwork(idArtwork)
+        List<FavoriteArtwork> listFavoriteArtworks = favoriteArtWorkRepo.findListFavoriteArtworksByIdArtwork(idArtwork)
                 .orElseThrow(() -> new ResourceNotFoundException("Not found favoriteArtwork with id artwork "+idArtwork));
-        return favoriteListArtworkDTOMapper.apply(listfavoriteArtworks);
+        return favoriteListArtworkDTOMapper.apply(listFavoriteArtworks);
 
     }
 

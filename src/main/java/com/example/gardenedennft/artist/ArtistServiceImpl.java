@@ -4,7 +4,6 @@ import com.example.gardenedennft.artist.entity.request.ArtistRequest;
 import com.example.gardenedennft.artwork.ArtworkDTO;
 import com.example.gardenedennft.artwork.ArtworkListDTOMapper;
 import com.example.gardenedennft.artwork.ArtworkResponse;
-import com.example.gardenedennft.artwork.ArtworkService;
 import com.example.gardenedennft.confirmationtoken.ConfirmationToken;
 import com.example.gardenedennft.confirmationtoken.ConfirmationTokenDTO;
 import com.example.gardenedennft.confirmationtoken.ConfirmationTokenService;
@@ -12,11 +11,9 @@ import com.example.gardenedennft.constant.SystemConstant;
 import com.example.gardenedennft.email.EmailService;
 import com.example.gardenedennft.exception.ApiRequestException;
 import com.example.gardenedennft.exception.ResourceNotFoundException;
-import com.example.gardenedennft.favoriteartwork.dto.FavoriteArtWorkDTO;
-import com.example.gardenedennft.favoriteartwork.dto.response.FavoriteArtWorkResponse;
-import com.example.gardenedennft.favoriteartwork.mapper.FavoriteListArtworkDTOMapper;
-import com.example.gardenedennft.favoriteartwork.repo.FavoriteArtWorkRepo;
-import com.example.gardenedennft.favoriteartwork.service.FavoriteArtWorkService;
+import com.example.gardenedennft.favoriteartist.dto.FavoriteArtistDTO;
+import com.example.gardenedennft.favoriteartist.mapper.FavoriteListArtistDTOMapper;
+import com.example.gardenedennft.favoriteartist.repo.FavoriteArtistRepo;
 import com.example.gardenedennft.jwt.JwtService;
 import com.example.gardenedennft.owner.Owner;
 import com.example.gardenedennft.owner.OwnerDTO;
@@ -61,6 +58,10 @@ public class ArtistServiceImpl implements ArtistService{
     private final ArtworkResponse artworkResponse;
 
     private final ArtworkListDTOMapper artworkListDTOMapper;
+
+    private final FavoriteArtistRepo favoriteArtistRepo;
+
+    private final FavoriteListArtistDTOMapper favoriteListArtistDTOMapper;
 
     @Override
     public Artist findArtistByEmail(String email) {
@@ -278,8 +279,10 @@ public class ArtistServiceImpl implements ArtistService{
             if(artworkDTO.getSupply() != null){
                 supply += artworkDTO.getSupply();
             }
-
         }
+
+        List<FavoriteArtistDTO> favoriteArtistDTOs = favoriteListArtistDTOMapper.apply(favoriteArtistRepo.findFavoriteArtistByArtistId(artist.getId())
+                .orElseThrow(() -> new ResourceNotFoundException("Not found favoriteArtist with id artist "+artist.getId())));
 
         if(listed != 0){
             floorPrice = Math.round((totalPrice / listed) * 100.0) / 100.0;
@@ -312,6 +315,7 @@ public class ArtistServiceImpl implements ArtistService{
                 .allVolume(allVolume)
                 .sales24h(sales24h)
                 .allSales(allSales)
+                .favoriteArtists(favoriteArtistDTOs)
                 .build();
     }
 

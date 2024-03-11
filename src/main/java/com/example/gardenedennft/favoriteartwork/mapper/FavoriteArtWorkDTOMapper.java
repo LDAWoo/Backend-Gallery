@@ -11,12 +11,10 @@ import java.util.function.Function;
 @Service
 @RequiredArgsConstructor
 public class FavoriteArtWorkDTOMapper implements Function<FavoriteArtwork, FavoriteArtWorkDTO> {
-        private  final ModelMapper mapper;
+    private final ModelMapper mapper;
+
     @Override
     public FavoriteArtWorkDTO apply(FavoriteArtwork favoriteArtwork) {
-<<<<<<< Updated upstream
-        return mapper.map(favoriteArtwork,FavoriteArtWorkDTO.class);
-=======
         FavoriteArtWorkDTO favoriteArtWorkDTO = FavoriteArtWorkDTO.builder()
                 .id_artwork(favoriteArtwork.getArtwork().getId())
                 .wallet_address(favoriteArtwork.getWallet_address())
@@ -24,7 +22,7 @@ public class FavoriteArtWorkDTOMapper implements Function<FavoriteArtwork, Favor
                 .build();
 
         return favoriteArtWorkDTO;
->>>>>>> Stashed changes
+
 
     }
 }

@@ -2,7 +2,6 @@ package com.example.gardenedennft.owner;
 
 import com.example.gardenedennft.artist.Artist;
 import com.example.gardenedennft.artwork.Artwork;
-import com.example.gardenedennft.favoriteowner.entity.FavoriteOwner;
 import com.example.gardenedennft.utils.BaseEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -24,9 +23,6 @@ public class Owner extends BaseEntity {
 
     @OneToMany(mappedBy = "owner", fetch = FetchType.LAZY)
     private List<Artwork> artworks;
-
-    @OneToMany(mappedBy = "owner", fetch = FetchType.LAZY)
-    private List<FavoriteOwner> favoriteOwners;
 
     @ManyToOne
     @JoinColumn(name = "id_artist")
