@@ -24,6 +24,7 @@ public class ArtworkDTO {
     private String description;
     private String image_url;
     private String wallet_address;
+    private String chain;
     private Double price;
     private Integer supply;
     private Integer royalty;
@@ -32,7 +33,7 @@ public class ArtworkDTO {
     private Integer status;
 
     private ArtistDTO artist;
-    private OwnerDTO owner;
+    private List<OwnerDTO> owner;
     private TransactionDTO transaction;
     private List<AttributeDTO> attributes;
     private List<FavoriteArtWorkDTO> favoriteArtWorks;

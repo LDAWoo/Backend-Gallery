@@ -14,7 +14,17 @@ public class FavoriteArtWorkDTOMapper implements Function<FavoriteArtwork, Favor
         private  final ModelMapper mapper;
     @Override
     public FavoriteArtWorkDTO apply(FavoriteArtwork favoriteArtwork) {
+<<<<<<< Updated upstream
         return mapper.map(favoriteArtwork,FavoriteArtWorkDTO.class);
+=======
+        FavoriteArtWorkDTO favoriteArtWorkDTO = FavoriteArtWorkDTO.builder()
+                .id_artwork(favoriteArtwork.getArtwork().getId())
+                .wallet_address(favoriteArtwork.getWallet_address())
+                .status(favoriteArtwork.getStatus())
+                .build();
+
+        return favoriteArtWorkDTO;
+>>>>>>> Stashed changes
 
     }
 }

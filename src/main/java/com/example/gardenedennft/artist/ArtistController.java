@@ -1,6 +1,6 @@
 package com.example.gardenedennft.artist;
 
-import com.example.gardenedennft.owner.Owner;
+import com.example.gardenedennft.artist.entity.request.ArtistRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -21,6 +21,12 @@ public class ArtistController {
         return new ResponseEntity<>(artistService.findArtistByEmail(email), HttpStatus.OK);
     }
 
+    @PostMapping("/updateArtist")
+    public ResponseEntity<?> updateArtist(@RequestBody ArtistRequest artistRequest){
+        artistService.updateArtist(artistRequest);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
     @GetMapping("/findArtistBySymbol/{symbol}")
     public ResponseEntity<?> findArtistBySymbol(@PathVariable String symbol){
         return new ResponseEntity<>(artistService.findArtistBySymbol(symbol), HttpStatus.OK);
@@ -36,10 +42,31 @@ public class ArtistController {
         return new ResponseEntity<>(artistService.findAll(), HttpStatus.OK);
     }
 
+    @GetMapping("/getAllArtistsByTrending")
+    public ResponseEntity<?> getAllArtistsByTrending(){
+        return new ResponseEntity<>(artistService.findAllArtistsByTrending(), HttpStatus.OK);
+    }
+
     @PostMapping("/authenticated")
-    public ResponseEntity<?> authenticated(@RequestBody ArtistAuthenticationRequest request){
+    public ResponseEntity<?>  authenticated(@RequestBody ArtistAuthenticationRequest request){
         artistService.authentication(request);
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @PostMapping("/auth/sign-in")
+    public ResponseEntity<?> signIn(@RequestBody ArtistAuthenticationRequest request){
+        artistService.artistSignIn(request);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @GetMapping("/auth/verify")
+    public ResponseEntity<?> verify(@RequestParam("token") String token, HttpServletResponse servletResponse) throws IOException {
+        ArtistDTO artistDTO = artistService.confirmationToken(token);
+        String currentToken = artistDTO.getToken();
+        String redirectUrl = "http://localhost:5173/?token=" + currentToken;
+        servletResponse.sendRedirect(redirectUrl);
+
+        return new ResponseEntity<>(artistDTO,HttpStatus.OK);
     }
 
     @GetMapping("/auth/confirm")

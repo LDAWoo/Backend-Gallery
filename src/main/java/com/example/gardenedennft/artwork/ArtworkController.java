@@ -41,15 +41,15 @@ public class ArtworkController {
         return new ResponseEntity<>(artworkService.findArtworkByIdAndEmail(id,email),HttpStatus.OK);
     }
 
-    @GetMapping("/getArtworkByIdOwner/{id}")
-    public ResponseEntity<?> findArtworkByIdOwner(@PathVariable String id){
+    @GetMapping("/getArtworkByIdArtist/{id}")
+    public ResponseEntity<?> findArtworkByIdArtist(@PathVariable String id){
         UUID uuid = UUID.fromString(id);
-        return new ResponseEntity<>(artworkService.findArtworkByIdOwnerAndStatus(uuid, SystemConstant.STATUS_NFT_ACTIVE),HttpStatus.OK);
+        return new ResponseEntity<>(artworkService.findArtworkByIdArtistAndStatus(uuid, SystemConstant.STATUS_NFT_ACTIVE),HttpStatus.OK);
     }
 
     @PutMapping("/updateArtwork")
-    public ResponseEntity<?> updateArtwork(@RequestBody Artwork artwork){
-        artworkService.updateNFT(artwork);
-        return new ResponseEntity<>(HttpStatus.OK);
+    public ResponseEntity<?> updateArtworkById(@RequestBody Artwork artwork){
+        artworkService.updateArtworkById(artwork);
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 }

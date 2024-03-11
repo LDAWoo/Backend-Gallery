@@ -8,5 +8,5 @@ public interface OwnerService {
     OwnerDTO findOwnerByWalletAddress(String walletAddress);
     void updateOwner(Owner owner);
     OwnerDTO findOwnerByIdArtwork(UUID id);
-    List<OwnerDTO> findAllOwnerByIdArtwork(UUID id);
+    List<OwnerDTO> findAllOwnerByIdArtist(UUID id);
 }

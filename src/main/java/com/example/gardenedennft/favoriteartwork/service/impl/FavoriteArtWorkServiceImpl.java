@@ -42,7 +42,7 @@ public class FavoriteArtWorkServiceImpl implements FavoriteArtWorkService {
         String currentWalletAddress = favoriteArtworkRequest.getWalletAddress();
         Integer currentIdArtwork = favoriteArtworkRequest.getIdArtwork();
 
-        if(ownerResponse.existsOwnerByWalletAddress(currentWalletAddress)){
+        if(!ownerResponse.existsOwnerByWalletAddress(currentWalletAddress)){
             throw new ResourceNotFoundException("Not found owner with wallet address "+currentWalletAddress);
         }
 

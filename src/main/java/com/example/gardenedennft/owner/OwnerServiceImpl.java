@@ -66,8 +66,8 @@ public class OwnerServiceImpl implements OwnerService{
     }
 
     @Override
-    public List<OwnerDTO> findAllOwnerByIdArtwork(UUID id) {
-        List<Owner> owners = ownerResponse.findAllOwnerByIdArtwork(id)
+    public List<OwnerDTO> findAllOwnerByIdArtist(UUID id) {
+        List<Owner> owners = ownerResponse.findAllOwnerByIdArtist(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Owner not  with id artist "+id));
 
         List<OwnerDTO> ownerDTOList = ownerListDTOMapper.apply(owners);

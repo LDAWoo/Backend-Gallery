@@ -17,7 +17,6 @@ public class FavoriteArtWorkController {
 
     @PostMapping("/add-favoriteArtwork")
     public ResponseEntity<?> addFavoriteArtWork(@RequestBody FavoriteArtworkRequest favoriteArtworkRequest){
-        favoriteArtWorkService.addFavoriteArtWork(favoriteArtworkRequest);
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(favoriteArtWorkService.addFavoriteArtWork(favoriteArtworkRequest),HttpStatus.OK);
     }
 }

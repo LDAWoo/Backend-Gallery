@@ -3,6 +3,7 @@ package com.example.gardenedennft.artwork;
 import com.example.gardenedennft.TransactionType.TransactionType;
 import com.example.gardenedennft.TransactionType.TransactionTypeService;
 import com.example.gardenedennft.artist.*;
+import com.example.gardenedennft.artist.entity.request.ArtistRequest;
 import com.example.gardenedennft.attribute.Attribute;
 import com.example.gardenedennft.attribute.AttributeDTO;
 import com.example.gardenedennft.attribute.AttributeDTOMapper;
@@ -21,7 +22,6 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.lang.reflect.Field;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -65,15 +65,8 @@ public class ArtworkServiceImpl implements ArtworkService{
     @Transactional
     @Override
     public void createNFT(ArtistRequest artistRequest, ArtworkRequest artworkRequest, TransactionRequest transactionRequest, List<String> categoryIds) {
-        Artist updateArtist = Artist.builder()
-                        .email(artistRequest.getEmail())
-                        .symbol(artistRequest.getSymbol())
-                        .discord_url(artistRequest.getDiscord_url())
-                        .twitter_url(artistRequest.getTwitter_url())
-                        .website_url(artistRequest.getWebsite_url())
-                        .build();
 
-        artistService.updateArtist(updateArtist);
+        artistService.updateArtist(artistRequest);
 
         Artist artist = artistService.findArtistById(artistRequest.getId_artist());
 
@@ -83,12 +76,14 @@ public class ArtworkServiceImpl implements ArtworkService{
                         .status(true)
                         .build();
 
-        Boolean ownerExists = ownerResponse.existsOwnerByWalletAddress(artworkRequest.getWallet_address());
-        if(!ownerExists){
-            ownerResponse.save(updateOwner).getId();
-        }
+        Boolean ownerExists = ownerResponse.existsOwnerByIdArtistAndWalletAddress(artistRequest.getId_artist(),artworkRequest.getWallet_address());
 
-        Owner owner = ownerResponse.findOwnerByWalletAddress(artworkRequest.getWallet_address()).get();
+        Owner owner;
+        if(!ownerExists){
+            owner = ownerResponse.save(updateOwner);
+        }else{
+            owner = ownerResponse.findOwnerByIdArtistAndWalletAddress(artistRequest.getId_artist(),artworkRequest.getWallet_address()).get();
+        }
 
         Artwork artwork = Artwork.builder()
                 .owner(owner)
@@ -168,13 +163,21 @@ public class ArtworkServiceImpl implements ArtworkService{
     }
 
     @Override
-    public ArtworkRepo findArtworkByIdOwnerAndStatus(UUID id, Integer status) {
-        List<Artwork> artworks = artworkResponse.findArtworkByIdOwnerAndStatus(id, status)
-                .orElseThrow(() -> new ResourceNotFoundException("Not found artwork with id owner "+id));
+    public List<ArtworkDTO> getAllArtworkByIdArtistAndStatus(UUID id, Integer status){
+        List<Artwork> artworks = artworkResponse.findArtworkByIdArtistAndStatus(id, status)
+                .orElseThrow(() -> new ResourceNotFoundException("Not found artwork with id artist "+id));
 
         List<ArtworkDTO> artworksDTO = artworks.stream()
                 .map(artwork -> mapToArtworkDTO(artwork, id))
                 .collect(Collectors.toList());
+
+        return artworksDTO;
+    }
+
+    @Override
+    public ArtworkRepo findArtworkByIdArtistAndStatus(UUID id, Integer status) {
+
+        List<ArtworkDTO> artworksDTO = getAllArtworkByIdArtistAndStatus(id, status);
 
         return ArtworkRepo.builder()
                 .listResult(artworksDTO)
@@ -182,8 +185,10 @@ public class ArtworkServiceImpl implements ArtworkService{
     }
 
     private ArtworkDTO mapToArtworkDTO(Artwork artwork, UUID id) {
-        Owner owner = ownerService.findOwnerById(id);
-        Artist artist = artistService.findArtistById(owner.getArtist().getId());
+        List<OwnerDTO> owners = ownerService.findAllOwnerByIdArtist(id);
+
+        Artist artist = artistService.findArtistById(id);
+
         Transaction transaction = transactionService.findTransactionByArtworkId(artwork.getId());
         List<Attribute> attributes = attributeResponse.findAllAttributeByIdArtwork(artwork.getId())
                 .orElseThrow(() -> new ResourceNotFoundException("Not find attributes with artwork ID " + artwork.getId()));
@@ -197,6 +202,7 @@ public class ArtworkServiceImpl implements ArtworkService{
                 .description(artwork.getDescription())
                 .image_url(artwork.getImage_url())
                 .wallet_address(artwork.getWallet_address())
+                .chain(artwork.getChain())
                 .price(artwork.getPrice())
                 .supply(artwork.getSupply())
                 .royalty(artwork.getRoyalty())
@@ -204,7 +210,7 @@ public class ArtworkServiceImpl implements ArtworkService{
                 .minted_date(artwork.getMinted_date())
                 .status(artwork.getStatus())
                 .artist(artistDTOMapper.apply(artist))
-                .owner(ownerDTOMapper.apply(owner))
+                .owner(owners)
                 .transaction(transactionDTOMapper.apply(transaction))
                 .attributes(attributeDTOMapper.apply(attributes))
                 .favoriteArtWorks(favoriteArtWorks)
@@ -242,24 +248,53 @@ public class ArtworkServiceImpl implements ArtworkService{
     }
 
     @Override
-    public void updateNFT(Artwork artwork) {
-        artworkResponse.findById(artwork.getId()).ifPresent(artworkUpdate -> {
-            Field[] fields = Artwork.class.getDeclaredFields();
+    public void updateArtworkById(Artwork artwork) {
+        Artwork artworkUpdate =  artworkResponse.findById(artwork.getId())
+                        .orElseThrow(() -> new ResourceNotFoundException("Not found artwork with id "+artwork.getId()));
 
-            for (Field field: fields){
-                try{
-                    field.setAccessible(true);
-                    Object newValue = field.get(artwork);
-                    if(newValue != null) {
-                        field.set(artworkUpdate, newValue);
-                    }
-                }catch (IllegalAccessException e) {
-                    e.printStackTrace();
-                }
-            }
+        if (artwork.getName() != null) {
+            artworkUpdate.setName(artwork.getName());
+        }
+        if (artwork.getSymbol() != null) {
+            artworkUpdate.setSymbol(artwork.getSymbol());
+        }
+        if (artwork.getDescription() != null) {
+            artworkUpdate.setDescription(artwork.getDescription());
+        }
+        if (artwork.getImage_url() != null) {
+            artworkUpdate.setImage_url(artwork.getImage_url());
+        }
+        if (artwork.getWallet_address() != null) {
+            artworkUpdate.setWallet_address(artwork.getWallet_address());
+        }
+        if (artwork.getChain() != null) {
+            artworkUpdate.setChain(artwork.getChain());
+        }
+        if (artwork.getPrice() != null) {
+            artworkUpdate.setPrice(artwork.getPrice());
+        }
+        if (artwork.getLastPrice() != null) {
+            artworkUpdate.setLastPrice(artwork.getLastPrice());
+        }
+        if (artwork.getSupply() != null) {
+            artworkUpdate.setSupply(artwork.getSupply());
+        }
+        if (artwork.getRoyalty() != null) {
+            artworkUpdate.setRoyalty(artwork.getRoyalty());
+        }
+        if (artwork.getMinted() != null) {
+            artworkUpdate.setMinted(artwork.getMinted());
+        }
+        if (artwork.getMinted_date() != null) {
+            artworkUpdate.setMinted_date(artwork.getMinted_date());
+        }
+        if (artwork.getView_count() != null) {
+            artworkUpdate.setView_count(artwork.getView_count());
+        }
+        if (artwork.getStatus() != null) {
+            artworkUpdate.setStatus(artwork.getStatus());
+        }
 
-            artworkResponse.save(artworkUpdate);
-        });
-
+        artworkResponse.save(artworkUpdate);
     }
 }

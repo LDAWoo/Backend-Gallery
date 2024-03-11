@@ -9,4 +9,5 @@ import lombok.NoArgsConstructor;
 @Data
 public class ArtistAuthenticationRequest {
     private String email;
+    private String walletAddress;
 }

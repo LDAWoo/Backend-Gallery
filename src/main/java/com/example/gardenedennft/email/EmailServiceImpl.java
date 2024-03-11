@@ -156,5 +156,134 @@ public class EmailServiceImpl implements EmailService{
                 "</tbody>";
     }
 
+    @Override
+    public String buildEmailVerify(String email, String link, boolean isValidEmail) {
+
+        return "<div style=\"margin:0;background-color:#000000;padding:0\">\n" +
+                "<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" role=\"presentation\" style=\"background-color:#000000\">\n" +
+                "  <tbody>\n" +
+                "  <tr>\n" +
+                "    <td>\n" +
+                "      <table align=\"center\" width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" role=\"presentation\" style=\"background-color:#000000\">\n" +
+                "        <tbody>\n" +
+                "        \n" +
+                "        <tr>\n" +
+                "          <td>\n" +
+                "            <table class=\"m_2990887443810164962row-content m_2990887443810164962stack\" align=\"center\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" role=\"presentation\" style=\"color:#000000;width:650px\" width=\"650\">\n" +
+                "              <tbody>\n" +
+                "              <tr>\n" +
+                "                <td class=\"m_2990887443810164962column\" width=\"100%\" style=\"font-weight:400;text-align:left;vertical-align:top;padding-top:0px;padding-bottom:0px;border-top:0px;border-right:0px;border-bottom:0px;border-left:0px\">\n" +
+                "                  <table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" role=\"presentation\">\n" +
+                "                    <tbody><tr>\n" +
+                "                      <td style=\"width:100%;padding-right:0px;padding-left:0px\">\n" +
+                "                      <div align=\"center\" style=\"line-height:10px\"><img src=\"https://ci3.googleusercontent.com/meips/ADKq_NaVo5p-Vs5-Cbza-aI3JB7oJImL7sevixczv2qmtFDcd1J3gLXIP_gUzEUp3kV3E6jmuU8J47lsEqjLzz_Xq1Qgv857z2r5VPEvauHaVpJ6=s0-d-e1-ft#https://ord.cdn.magiceden.dev/static_resources/ME+logo.png\" style=\"display:block;height:auto;border:0;width:100px;margin:50px;max-width:100%\" width=\"130\" alt=\"Magic Eden logo\" title=\"Magic Eden logo\" class=\"CToWUd\" data-bit=\"iit\"></div>\n" +
+                "                      </td>\n" +
+                "                    </tr>\n" +
+                "                  </tbody></table>\n" +
+                "                </td>\n" +
+                "              </tr>\n" +
+                "              </tbody>\n" +
+                "            </table>\n" +
+                "          </td>\n" +
+                "        </tr>\n" +
+                "        </tbody>\n" +
+                "      </table>\n" +
+                "      <table align=\"center\" width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" role=\"presentation\" style=\"background-color:#000000\">\n" +
+                "        <tbody>\n" +
+                "        <tr>\n" +
+                "          <td>\n" +
+                "            <table class=\"m_2990887443810164962row-content m_2990887443810164962stack\" align=\"center\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" role=\"presentation\" style=\"background-color:#000000;color:#000000;width:650px\" width=\"650\">\n" +
+                "              <tbody>\n" +
+                "              <tr>\n" +
+                "                <td class=\"m_2990887443810164962column\" width=\"100%\" style=\"font-weight:400;text-align:left;vertical-align:top;padding-top:20px;padding-bottom:0px;border-top:0px;border-right:0px;border-bottom:0px;border-left:0px\">\n" +
+                "                  <table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" role=\"presentation\">\n" +
+                "                    <tbody><tr>\n" +
+                "                      <td style=\"padding-bottom:15px;text-align:center;width:100%\">\n" +
+                "                        <h1 style=\"margin:0;color:#ffffff;direction:ltr;font-family:'Cabin',Arial,'Helvetica Neue',Helvetica,sans-serif;font-size:28px;font-weight:normal;letter-spacing:normal;line-height:120%;text-align:center;margin-top:0;margin-bottom:0\"><strong>Gm! Please verify your email address</strong></h1>\n" +
+                "                      </td>\n" +
+                "                    </tr>\n" +
+                "                  </tbody></table>\n" +
+                "                  <table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" role=\"presentation\">\n" +
+                "                    <tbody><tr>\n" +
+                "                      <td style=\"padding-bottom:15px;text-align:center;width:100%\">\n" +
+                "                        <h1 style=\"margin:0;color:#b8b7b7;direction:ltr;font-family:'Cabin',Arial,'Helvetica Neue',Helvetica,sans-serif;font-size:17px;font-weight:normal;letter-spacing:normal;line-height:120%;text-align:center;margin-top:0;margin-bottom:0\">Clicking this button will verify your email address:</h1>\n" +
+                "                      </td>\n" +
+                "                    </tr>\n" +
+                "                  </tbody></table>\n" +
+                "                  <table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" role=\"presentation\">\n" +
+                "                    <tbody><tr>\n" +
+                "                      <td style=\"padding-bottom:40px;padding-left:10px;padding-right:10px;padding-top:15px;text-align:center\">\n" +
+                "                        <div align=\"center\">\n" +
+                "                          <a href=\""+link+"\" style=\"text-decoration:none;display:inline-block;color:#ffffff;background-color:#e42575;border-radius:0px;width:auto;border-top:1px solid #e42575;border-right:1px solid #e42575;border-bottom:1px solid #e42575;border-left:1px solid #e42575;padding-top:10px;padding-bottom:10px;font-family:'Cabin',Arial,'Helvetica Neue',Helvetica,sans-serif;text-align:center;word-break:keep-all\" target=\"_blank\">\n" +
+                "                            <span style=\"padding-left:40px;padding-right:40px;font-size:16px;display:inline-block;letter-spacing:normal\">\n" +
+                "                              <span style=\"font-size:16px;line-height:2;word-break:break-word\">\n" +
+                "                                <span style=\"font-size:16px;line-height:32px\">\n" +
+                "                                  Verify my email\n" +
+                "                                </span>\n" +
+                "                              </span>\n" +
+                "                            </span>\n" +
+                "                          </a>\n" +
+                "                        </div>\n" +
+                "                      </td>\n" +
+                "                    </tr>\n" +
+                "                  </tbody></table>\n" +
+                "                </td>\n" +
+                "              </tr>\n" +
+                "              </tbody>\n" +
+                "            </table>\n" +
+                "          </td>\n" +
+                "        </tr>\n" +
+                "        </tbody>\n" +
+                "      </table>\n" +
+                "      <table align=\"center\" width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" role=\"presentation\" style=\"background-color:#000000\">\n" +
+                "        <tbody>\n" +
+                "        <tr>\n" +
+                "          <td>\n" +
+                "            <table class=\"m_2990887443810164962row-content m_2990887443810164962stack\" align=\"center\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" role=\"presentation\" style=\"color:#000000;width:650px\" width=\"650\">\n" +
+                "              <tbody>\n" +
+                "              <tr>\n" +
+                "                <td class=\"m_2990887443810164962column\" width=\"100%\" style=\"font-weight:400;text-align:left;vertical-align:top;padding-top:20px;padding-bottom:10px;border-top:0px;border-right:0px;border-bottom:0px;border-left:0px\">\n" +
+                "                  <table width=\"100%\" border=\"0\" cellpadding=\"5\" cellspacing=\"0\" role=\"presentation\">\n" +
+                "                    <tbody><tr>\n" +
+                "                      <td>\n" +
+                "                        <div align=\"center\">\n" +
+                "                          <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" role=\"presentation\" width=\"100%\">\n" +
+                "                            <tbody><tr>\n" +
+                "                              <td style=\"font-size:1px;line-height:1px;border-top:0px solid #bbbbbb\"><span>\u200a</span></td>\n" +
+                "                            </tr>\n" +
+                "                          </tbody></table>\n" +
+                "                        </div>\n" +
+                "                      </td>\n" +
+                "                    </tr>\n" +
+                "                  </tbody></table>\n" +
+                "                  <table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" role=\"presentation\" style=\"word-break:break-word\">\n" +
+                "                    <tbody><tr>\n" +
+                "                      <td>\n" +
+                "                        <div style=\"font-family:sans-serif\">\n" +
+                "                          <div style=\"font-size:12px;color:#393d47;line-height:1.2;font-family:Arial,Helvetica Neue,Helvetica,sans-serif\">\n" +
+                "                            <p style=\"margin:0;text-align:center\"><span style=\"color:#8a3b8f\"><span style=\"font-size:11px\">If you no longer wish to receive emails from Garden Eden, you can unsubscribe <a href=\"https://unsubscribe.os-list.com/unsubscribe?token=eyJhbGciOiJFUzI1NiJ9.eyJpYXQiOjE3MDY3MDAxMDAsInVuc3Vic2NyaWJlX3Rva2VuIjoiYkdWa2RXTmhibWgyZFRNd01EWkFaMjFoYVd3dVkyOXRPelV4T0dRPSIsImFwcF9pZCI6IjZiNDg3ZGI2LTk4YjMtNDU3Mi1iOWM0LTYxMmNkZjE0NDk5NCIsIm5vdGlmaWNhdGlvbl9pZCI6ImJkMTk5MmEwLTFmN2EtNGE4ZC1hMzE0LTZkOTU0MzBhNzRhOCJ9.yG0Q1I0472PxC0BtyNauYqqfCwxAOhD4NvSmZ02_iHVWLDLkZKI1eqZQVCQioY0pldUpSs6cF3okWsBU3HwCzA\" target=\"_blank\" data-saferedirecturl=\"https://www.google.com/url?q=https://unsubscribe.os-list.com/unsubscribe?token%3DeyJhbGciOiJFUzI1NiJ9.eyJpYXQiOjE3MDY3MDAxMDAsInVuc3Vic2NyaWJlX3Rva2VuIjoiYkdWa2RXTmhibWgyZFRNd01EWkFaMjFoYVd3dVkyOXRPelV4T0dRPSIsImFwcF9pZCI6IjZiNDg3ZGI2LTk4YjMtNDU3Mi1iOWM0LTYxMmNkZjE0NDk5NCIsIm5vdGlmaWNhdGlvbl9pZCI6ImJkMTk5MmEwLTFmN2EtNGE4ZC1hMzE0LTZkOTU0MzBhNzRhOCJ9.yG0Q1I0472PxC0BtyNauYqqfCwxAOhD4NvSmZ02_iHVWLDLkZKI1eqZQVCQioY0pldUpSs6cF3okWsBU3HwCzA&amp;source=gmail&amp;ust=1708710975121000&amp;usg=AOvVaw0dkZIj3Pb4aAA5Zwo97X8j\"><u>here</u></a>.</span></span></p>\n" +
+                "                            <p style=\"margin:0;text-align:center\">&nbsp;</p>\n" +
+                "                            <p style=\"margin:0;text-align:center\"><span style=\"font-size:11px\"><span style=\"color:#8a3b8f\">©2024 Garden Eden</span></span></p>\n" +
+                "                            <p style=\"margin:0\">&nbsp;</p>\n" +
+                "                          </div>\n" +
+                "                        </div>\n" +
+                "                      </td>\n" +
+                "                    </tr>\n" +
+                "                  </tbody></table>\n" +
+                "                </td>\n" +
+                "              </tr>\n" +
+                "              </tbody>\n" +
+                "            </table>\n" +
+                "          </td>\n" +
+                "        </tr>\n" +
+                "        </tbody>\n" +
+                "      </table>\n" +
+                "    </td>\n" +
+                "  </tr>\n" +
+                "  </tbody>\n" +
+                "</table>\n" +
+                "</div>";
+    }
+
 
 }

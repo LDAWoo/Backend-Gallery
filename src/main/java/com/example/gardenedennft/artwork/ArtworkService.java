@@ -1,6 +1,6 @@
 package com.example.gardenedennft.artwork;
 
-import com.example.gardenedennft.artist.ArtistRequest;
+import com.example.gardenedennft.artist.entity.request.ArtistRequest;
 import com.example.gardenedennft.transaction.TransactionRequest;
 
 import java.util.List;
@@ -12,9 +12,10 @@ public interface ArtworkService {
     ArtworkRepo findArtworkByWalletAddress(String walletAddress);
     ArtworkRepo findArtworkByEmailAndStatus(String email,Integer status);
     ArtworkRepo findArtworkByEmail(String email);
-    ArtworkRepo findArtworkByIdOwnerAndStatus(UUID id, Integer status);
+    List<ArtworkDTO> getAllArtworkByIdArtistAndStatus(UUID id, Integer status);
+    ArtworkRepo findArtworkByIdArtistAndStatus(UUID id, Integer status);
     ArtworkTransactionAttributeDTO findArtworkByIdAndEmail(Integer id, String email);
     Artwork findArtworkByEmailAndId(String email,Integer id);
-    void updateNFT(Artwork artwork);
+    void updateArtworkById(Artwork artwork);
 
 }

@@ -1,5 +1,6 @@
 package com.example.gardenedennft.artist;
 
+import com.example.gardenedennft.artwork.ArtworkDTO;
 import com.example.gardenedennft.owner.Owner;
 import com.example.gardenedennft.utils.BaseDTO;
 import lombok.AllArgsConstructor;
@@ -25,4 +26,16 @@ public class ArtistDTO extends BaseDTO {
     private String bio;
     private String token;
     private Boolean status;
+
+    private Double floorPrice;
+    private Double buyNow;
+    private Double sellNow;
+    private Integer listed;
+    private Integer supply;
+    private Double percentListed;
+    private Double totalPrice;
+    private Double volume24h;
+    private Double allVolume;
+    private Double sales24h;
+    private Double allSales;
 }

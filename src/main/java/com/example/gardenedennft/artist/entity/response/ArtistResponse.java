@@ -1,8 +1,6 @@
-package com.example.gardenedennft.artist;
+package com.example.gardenedennft.artist.entity.response;
 
 import com.example.gardenedennft.artwork.ArtworkDTO;
-import com.example.gardenedennft.owner.Owner;
-import com.example.gardenedennft.owner.OwnerDTO;
 import com.example.gardenedennft.utils.BaseDTO;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -15,7 +13,7 @@ import java.util.List;
 @SuperBuilder(toBuilder = true)
 @AllArgsConstructor
 @NoArgsConstructor
-public class ArtistOwnerDTO extends BaseDTO {
+public class ArtistResponse extends BaseDTO {
     private String name;
     private String symbol;
     private String email;
@@ -28,6 +26,5 @@ public class ArtistOwnerDTO extends BaseDTO {
     private String token;
     private Boolean status;
 
-    private List<OwnerDTO> owners;
-
+    private List<ArtworkDTO> artworkDTOList;
 }

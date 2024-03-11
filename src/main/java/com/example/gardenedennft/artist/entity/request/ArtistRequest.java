@@ -1,4 +1,4 @@
-package com.example.gardenedennft.artist;
+package com.example.gardenedennft.artist.entity.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

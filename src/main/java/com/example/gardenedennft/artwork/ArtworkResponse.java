@@ -36,11 +36,10 @@ public interface ArtworkResponse extends JpaRepository<Artwork,Integer> {
 
     @Query("""
     SELECT a FROM Artwork a 
-    LEFT JOIN a.owner ow
-    WHERE ow.id = ?1
+    WHERE a.owner.artist.id = ?1
     AND a.status = ?2
     """)
-    Optional<List<Artwork>> findArtworkByIdOwnerAndStatus(UUID id, Integer status);
+    Optional<List<Artwork>> findArtworkByIdArtistAndStatus(UUID id, Integer status);
 
     @Query("""
     SELECT  a FROM Artwork a
@@ -50,4 +49,5 @@ public interface ArtworkResponse extends JpaRepository<Artwork,Integer> {
     AND ar.email = ?2
     """)
     Optional<Artwork> findArtworkByIdAndEmail(Integer id, String email);
+
 }

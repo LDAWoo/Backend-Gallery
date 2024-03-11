@@ -19,6 +19,7 @@ public class ArtworkDTOMapper implements Function<Artwork, ArtworkDTO> {
                 .supply(artwork.getSupply())
                 .minted(artwork.getMinted())
                 .wallet_address(artwork.getWallet_address())
+                .chain(artwork.getChain())
                 .status(artwork.getStatus())
                 .minted_date(artwork.getMinted_date())
                 .build();

@@ -33,10 +33,10 @@ public class AttributeServiceImpl implements AttributeService{
 
         for (Attribute attAdd : attributes) {
             boolean isDuplicate = attributeList.stream()
-                    .anyMatch(a -> a.getTrait_type().equals(attAdd.getTrait_type()) || a.getValue().equals(attAdd.getValue()));
+                    .anyMatch(a -> a.getTrait_type().equals(attAdd.getTrait_type()));
 
             if (isDuplicate) {
-                throw new ResourceDuplicateException("Attribute already exists: " + attAdd.getTrait_type() + ", " + attAdd.getValue());
+                throw new ResourceDuplicateException("Attribute already exists: " + attAdd.getTrait_type());
             }
         }
 

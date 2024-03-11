@@ -1,6 +1,6 @@
 package com.example.gardenedennft.artwork;
 
-import com.example.gardenedennft.artist.ArtistRequest;
+import com.example.gardenedennft.artist.entity.request.ArtistRequest;
 import com.example.gardenedennft.transaction.TransactionRequest;
 import lombok.AllArgsConstructor;
 import lombok.Data;
