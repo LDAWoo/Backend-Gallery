@@ -1,5 +1,6 @@
 package com.example.gardenedennft.artist;
 
+import com.example.gardenedennft.artist.entity.request.ArtistConditionRequest;
 import com.example.gardenedennft.artist.entity.request.ArtistRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -45,6 +46,14 @@ public class ArtistController {
     @GetMapping("/getAllArtistsByTrending")
     public ResponseEntity<?> getAllArtistsByTrending(){
         return new ResponseEntity<>(artistService.findAllArtistsByTrending(), HttpStatus.OK);
+    }
+
+    @GetMapping("/getArtistsByCondition")
+    public ResponseEntity<ArtistRepo> getAllArtistsByCondition(@RequestParam String name, @RequestParam String symbol){
+        ArtistConditionRequest request = new ArtistConditionRequest();
+        request.setName(name);
+        request.setSymbol(symbol);
+        return new ResponseEntity<>(artistService.findAllArtistsByCondition(request), HttpStatus.OK);
     }
 
     @PostMapping("/authenticated")

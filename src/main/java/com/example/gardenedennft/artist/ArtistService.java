@@ -1,5 +1,6 @@
 package com.example.gardenedennft.artist;
 
+import com.example.gardenedennft.artist.entity.request.ArtistConditionRequest;
 import com.example.gardenedennft.artist.entity.request.ArtistRequest;
 
 import java.util.UUID;
@@ -15,6 +16,7 @@ public interface ArtistService {
     void updateArtist (ArtistRequest artistRequest);
     ArtistRepo findAll();
     ArtistRepo findAllArtistsByTrending();
+    ArtistRepo findAllArtistsByCondition(ArtistConditionRequest request);
     ArtistDTO findArtistByToken(String token);
     ArtistOwnerDTO findArtistBySymbol(String symbol);
 }

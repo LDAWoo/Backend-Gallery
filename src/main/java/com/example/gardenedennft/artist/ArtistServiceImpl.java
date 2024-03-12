@@ -1,5 +1,6 @@
 package com.example.gardenedennft.artist;
 
+import com.example.gardenedennft.artist.entity.request.ArtistConditionRequest;
 import com.example.gardenedennft.artist.entity.request.ArtistRequest;
 import com.example.gardenedennft.artwork.ArtworkDTO;
 import com.example.gardenedennft.artwork.ArtworkListDTOMapper;
@@ -244,13 +245,46 @@ public class ArtistServiceImpl implements ArtistService{
     public ArtistRepo findAllArtistsByTrending() {
         List<Artist> allArtists = artistResponse.findAll();
 
-        List<ArtistDTO> trendingArtists = allArtists.stream()
-                .map(this::calculateArtistStats)
-                .collect(Collectors.toList());
+        List<ArtistDTO> trendingArtists = getAllListArtist(allArtists);
 
         return ArtistRepo.builder()
                 .listResult(trendingArtists)
                 .build();
+    }
+
+    @Override
+    public ArtistRepo findAllArtistsByCondition(ArtistConditionRequest request) {
+        List<ArtistSqlNativeResult> results = artistResponse.findAllArtistByCondition(request)
+                .orElseThrow(() -> new ResourceNotFoundException("Not found"));
+
+        List<Artist> artistList = new ArrayList<>();
+
+        for (ArtistSqlNativeResult splNative : results) {
+            Artist artist = new Artist();
+            artist.setId(splNative.getId());
+            artist.setName(splNative.getName());
+            artist.setImage_url(splNative.getImage_url());
+            artist.setSymbol(splNative.getSymbol());
+            artist.setDiscord_url(splNative.getDiscord_url());
+            artist.setEmail(splNative.getEmail());
+            artist.setTwitter_url(splNative.getTwitter_url());
+            artist.setBio(splNative.getBio());
+            artist.setTelegram_url(splNative.getTelegram_url());
+            artistList.add(artist);
+        }
+
+        List<ArtistDTO> trendingArtists = getAllListArtist(artistList);
+        return ArtistRepo.builder()
+                .listResult(trendingArtists)
+                .build();
+    }
+
+    private List<ArtistDTO> getAllListArtist (List<Artist> artists){
+        List<ArtistDTO> trendingArtists = artists.stream()
+                .map(this::calculateArtistStats)
+                .collect(Collectors.toList());
+
+        return trendingArtists;
     }
 
     private ArtistDTO calculateArtistStats(Artist artist) {
@@ -289,7 +323,7 @@ public class ArtistServiceImpl implements ArtistService{
         }
 
         if (supply != 0) {
-            percentListed = (double) listed / supply * 100;
+            percentListed = ((double) listed / supply) * 100;
         }
 
         return ArtistDTO.builder()
