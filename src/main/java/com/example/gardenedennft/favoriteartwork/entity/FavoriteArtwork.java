@@ -1,6 +1,6 @@
 package com.example.gardenedennft.favoriteartwork.entity;
 
-import com.example.gardenedennft.artwork.Artwork;
+import com.example.gardenedennft.artwork.entity.Artwork;
 import com.example.gardenedennft.utils.BaseEntity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;

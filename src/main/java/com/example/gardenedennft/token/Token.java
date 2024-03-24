@@ -1,8 +1,7 @@
 package com.example.gardenedennft.token;
 
 
-import com.example.gardenedennft.artist.Artist;
-import com.example.gardenedennft.owner.Owner;
+import com.example.gardenedennft.artist.entity.Artist;
 import com.example.gardenedennft.utils.BaseID;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

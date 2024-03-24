@@ -1,7 +1,6 @@
 package com.example.gardenedennft.jwt;
 
-import com.example.gardenedennft.artist.Artist;
-import com.example.gardenedennft.owner.Owner;
+import com.example.gardenedennft.artist.entity.Artist;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;

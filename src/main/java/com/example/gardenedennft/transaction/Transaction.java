@@ -1,7 +1,7 @@
 package com.example.gardenedennft.transaction;
 
 import com.example.gardenedennft.TransactionType.TransactionType;
-import com.example.gardenedennft.artwork.Artwork;
+import com.example.gardenedennft.artwork.entity.Artwork;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

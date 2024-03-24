@@ -1,7 +1,7 @@
 package com.example.gardenedennft.favoriteartist.service.Impl;
 
-import com.example.gardenedennft.artist.Artist;
-import com.example.gardenedennft.artist.ArtistResponse;
+import com.example.gardenedennft.artist.entity.Artist;
+import com.example.gardenedennft.artist.repo.ArtistRepo;
 import com.example.gardenedennft.exception.ResourceNotFoundException;
 import com.example.gardenedennft.favoriteartist.dto.FavoriteArtistDTO;
 import com.example.gardenedennft.favoriteartist.dto.request.FavoriteArtistRequest;
@@ -27,7 +27,7 @@ public class FavoriteArtistServiceImpl implements FavoriteArtistService {
 
     private final FavoriteListArtistDTOMapper favoriteListArtistDTOMapper;
 
-    private final ArtistResponse artistResponse;
+    private final ArtistRepo artistResponse;
     @Override
     public FavoriteArtistDTO addFavoriteArtist(FavoriteArtistRequest favoriteArtistRequest) {
         UUID currentId = favoriteArtistRequest.getId_artist();

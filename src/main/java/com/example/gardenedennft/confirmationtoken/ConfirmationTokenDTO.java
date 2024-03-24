@@ -1,7 +1,6 @@
 package com.example.gardenedennft.confirmationtoken;
 
-import com.example.gardenedennft.artist.Artist;
-import com.example.gardenedennft.owner.Owner;
+import com.example.gardenedennft.artist.entity.Artist;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 

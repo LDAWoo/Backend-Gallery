@@ -1,6 +1,6 @@
 package com.example.gardenedennft.userrole;
 
-import com.example.gardenedennft.artist.Artist;
+import com.example.gardenedennft.artist.entity.Artist;
 import com.example.gardenedennft.role.Role;
 import com.example.gardenedennft.utils.BaseEntity;
 import jakarta.persistence.Entity;
@@ -8,7 +8,6 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.*;
-import lombok.experimental.SuperBuilder;
 
 @Getter
 @Setter

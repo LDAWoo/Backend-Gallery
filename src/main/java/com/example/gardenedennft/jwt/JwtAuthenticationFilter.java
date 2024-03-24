@@ -1,6 +1,6 @@
 package com.example.gardenedennft.jwt;
 
-import com.example.gardenedennft.artist.ArtistResponse;
+import com.example.gardenedennft.artist.repo.ArtistRepo;
 import com.example.gardenedennft.exception.ResourceNotFoundException;
 import com.example.gardenedennft.token.TokenResponse;
 import jakarta.servlet.FilterChain;
@@ -26,7 +26,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final TokenResponse tokenResponse;
 
-    private final ArtistResponse artistResponse;
+    private final ArtistRepo artistRepo;
 
     @Override
     protected void doFilterInternal(
@@ -46,7 +46,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         if(email != null && SecurityContextHolder.getContext().getAuthentication() == null){
 
-            UserDetails userDetails = artistResponse.findOwnerByEmailAndStatus(email, true)
+            UserDetails userDetails = artistRepo.findOwnerByEmailAndStatus(email, true)
                     .orElseThrow(() -> new ResourceNotFoundException("Find owner by email "+email+ " not found"));
             var isValidToken = tokenResponse.findByToken(jwt)
                     .map(t-> !t.getExpired() && !t.getRevoked())

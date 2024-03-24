@@ -1,18 +1,16 @@
 package com.example.gardenedennft.favoriteartwork.service.impl;
 
-import com.example.gardenedennft.artwork.Artwork;
-import com.example.gardenedennft.artwork.ArtworkResponse;
+import com.example.gardenedennft.artwork.entity.Artwork;
+import com.example.gardenedennft.artwork.repo.ArtworkRepo;
 import com.example.gardenedennft.exception.ResourceNotFoundException;
 import com.example.gardenedennft.favoriteartwork.dto.FavoriteArtWorkDTO;
 import com.example.gardenedennft.favoriteartwork.dto.request.FavoriteArtworkRequest;
-import com.example.gardenedennft.favoriteartwork.dto.response.FavoriteArtWorkResponse;
 import com.example.gardenedennft.favoriteartwork.entity.FavoriteArtwork;
 import com.example.gardenedennft.favoriteartwork.mapper.FavoriteArtWorkDTOMapper;
 import com.example.gardenedennft.favoriteartwork.mapper.FavoriteListArtworkDTOMapper;
 import com.example.gardenedennft.favoriteartwork.repo.FavoriteArtWorkRepo;
 import com.example.gardenedennft.favoriteartwork.service.FavoriteArtWorkService;
-import com.example.gardenedennft.owner.Owner;
-import com.example.gardenedennft.owner.OwnerResponse;
+import com.example.gardenedennft.owner.repo.OwnerRepo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,23 +26,18 @@ public class FavoriteArtWorkServiceImpl implements FavoriteArtWorkService {
 
     private final  FavoriteArtWorkRepo favoriteArtWorkRepo;
 
-    private final ArtworkResponse artworkResponse;
+    private final ArtworkRepo artworkRepo;
 
     private final FavoriteListArtworkDTOMapper favoriteListArtworkDTOMapper;
 
     private final FavoriteArtWorkDTOMapper favoriteArtWorkDTOMapper;
 
-    private final OwnerResponse ownerResponse;
+    private final OwnerRepo ownerResponse;
 
     @Override
     public FavoriteArtWorkDTO addFavoriteArtWork(FavoriteArtworkRequest favoriteArtworkRequest) {
-
         String currentWalletAddress = favoriteArtworkRequest.getWalletAddress();
         Integer currentIdArtwork = favoriteArtworkRequest.getIdArtwork();
-
-        if (!ownerResponse.existsOwnerByWalletAddress(currentWalletAddress)) {
-            throw new ResourceNotFoundException("Not found owner with wallet address " + currentWalletAddress);
-        }
 
         FavoriteArtwork favoriteArtwork = findFavoriteArtWorkByWalletAddressAndIdArtwork(currentWalletAddress, currentIdArtwork);
 
@@ -52,7 +45,7 @@ public class FavoriteArtWorkServiceImpl implements FavoriteArtWorkService {
             favoriteArtwork.setStatus(!favoriteArtwork.getStatus());
             favoriteArtWorkRepo.save(favoriteArtwork);
         } else {
-            Artwork artwork = artworkResponse.findById(currentIdArtwork)
+            Artwork artwork = artworkRepo.findById(currentIdArtwork)
                     .orElseThrow(() -> new ResourceNotFoundException("Not found artwork with id " + currentIdArtwork));
 
             favoriteArtwork = favoriteArtWorkRepo.save(

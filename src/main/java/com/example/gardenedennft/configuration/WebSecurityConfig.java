@@ -1,9 +1,8 @@
 package com.example.gardenedennft.configuration;
 
 
-import com.example.gardenedennft.artist.ArtistResponse;
+import com.example.gardenedennft.artist.repo.ArtistRepo;
 import com.example.gardenedennft.exception.ResourceNotFoundException;
-import com.example.gardenedennft.owner.OwnerResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -18,7 +17,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class WebSecurityConfig {
-    private final ArtistResponse artistResponse;
+    private final ArtistRepo artistResponse;
 
     @Bean
     public UserDetailsService userDetailsService() {

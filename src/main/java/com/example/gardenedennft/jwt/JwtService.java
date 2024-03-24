@@ -1,6 +1,6 @@
 package com.example.gardenedennft.jwt;
 
-import com.example.gardenedennft.artist.Artist;
+import com.example.gardenedennft.artist.entity.Artist;
 import io.jsonwebtoken.Claims;
 import org.springframework.security.core.userdetails.UserDetails;
 
