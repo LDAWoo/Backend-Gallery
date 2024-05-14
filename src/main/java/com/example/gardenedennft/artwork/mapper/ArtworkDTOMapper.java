@@ -10,7 +10,7 @@ import java.util.function.Function;
 public class ArtworkDTOMapper implements Function<Artwork, ArtworkDTO> {
     @Override
     public ArtworkDTO apply(Artwork artwork) {
-        ArtworkDTO artworkDTO = ArtworkDTO.builder()
+        return ArtworkDTO.builder()
                 .id(artwork.getId())
                 .name(artwork.getName())
                 .symbol(artwork.getSymbol())
@@ -21,10 +21,13 @@ public class ArtworkDTOMapper implements Function<Artwork, ArtworkDTO> {
                 .supply(artwork.getSupply())
                 .minted(artwork.getMinted())
                 .wallet_address(artwork.getWallet_address())
+                .tokenAddress(artwork.getTokenAddress())
+                .listState(artwork.getListState())
                 .chain(artwork.getChain())
                 .status(artwork.getStatus())
                 .minted_date(artwork.getMinted_date())
+                .listedDate(artwork.getListedDate())
+                .createdDate(artwork.getCreatedDate())
                 .build();
-        return artworkDTO;
     }
 }

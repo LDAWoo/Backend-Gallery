@@ -3,6 +3,7 @@ package com.example.gardenedennft.artwork.dto;
 import com.example.gardenedennft.artist.dto.ArtistDTO;
 import com.example.gardenedennft.attribute.dto.AttributeDTO;
 import com.example.gardenedennft.favoriteartwork.dto.FavoriteArtWorkDTO;
+import com.example.gardenedennft.marketplace.dto.MarketplaceDTO;
 import com.example.gardenedennft.owner.dto.OwnerDTO;
 import com.example.gardenedennft.transaction.TransactionDTO;
 import lombok.AllArgsConstructor;
@@ -24,6 +25,7 @@ public class ArtworkDTO {
     private String description;
     private String image_url;
     private String wallet_address;
+    private String tokenAddress;
     private String chain;
     private Double price;
     private Integer supply;
@@ -31,10 +33,14 @@ public class ArtworkDTO {
     private Integer minted;
     private Date minted_date;
     private Integer status;
+    private Date listedDate;
+    private Date createdDate;
+    private String listState;
 
     private ArtistDTO artist;
     private List<OwnerDTO> owner;
     private TransactionDTO transaction;
+    private MarketplaceDTO marketplace;
     private List<AttributeDTO> attributes;
     private List<FavoriteArtWorkDTO> favoriteArtWorks;
 }

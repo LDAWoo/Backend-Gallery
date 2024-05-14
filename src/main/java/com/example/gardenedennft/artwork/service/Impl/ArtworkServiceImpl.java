@@ -10,9 +10,7 @@ import com.example.gardenedennft.artist.service.ArtistService;
 import com.example.gardenedennft.artwork.dto.ArtworkDTO;
 import com.example.gardenedennft.artwork.dto.response.ArtworkTransactionAttributeDTO;
 import com.example.gardenedennft.artwork.entity.Artwork;
-import com.example.gardenedennft.artwork.entity.request.ArtworkArtistRequest;
-import com.example.gardenedennft.artwork.entity.request.ArtworkConditionRequest;
-import com.example.gardenedennft.artwork.entity.request.ArtworkRequest;
+import com.example.gardenedennft.artwork.entity.request.*;
 import com.example.gardenedennft.artwork.entity.response.ArtworkResponse;
 import com.example.gardenedennft.artwork.mapper.ArtworkDTOMapper;
 import com.example.gardenedennft.artwork.mapper.ArtworkListDTOMapper;
@@ -27,8 +25,14 @@ import com.example.gardenedennft.exception.ResourceNotFoundException;
 import com.example.gardenedennft.favoriteartwork.dto.FavoriteArtWorkDTO;
 import com.example.gardenedennft.favoriteartwork.service.FavoriteArtWorkService;
 import com.example.gardenedennft.historycreatenft.HistoryCreateNFTService;
+import com.example.gardenedennft.marketplace.dto.MarketplaceDTO;
+import com.example.gardenedennft.marketplace.entity.Marketplace;
+import com.example.gardenedennft.marketplace.mapper.MarketplaceDTOMapper;
+import com.example.gardenedennft.marketplace.repo.MarketplaceRepo;
+import com.example.gardenedennft.marketplace.service.MarketplaceService;
 import com.example.gardenedennft.owner.dto.OwnerDTO;
 import com.example.gardenedennft.owner.entity.Owner;
+import com.example.gardenedennft.owner.mapper.OwnerDTOMapper;
 import com.example.gardenedennft.owner.repo.OwnerRepo;
 import com.example.gardenedennft.owner.service.OwnerService;
 import com.example.gardenedennft.transaction.*;
@@ -65,6 +69,8 @@ public class ArtworkServiceImpl implements ArtworkService {
 
     private final OwnerService ownerService;
 
+    private final OwnerDTOMapper ownerDTOMapper;
+
     private final AttributeRepo attributeRepo;
 
     private final AttributeDTOMapper attributeDTOMapper;
@@ -77,6 +83,9 @@ public class ArtworkServiceImpl implements ArtworkService {
 
     private final FavoriteArtWorkService favoriteArtWorkService;
 
+    private final MarketplaceRepo marketplaceRepo;
+
+    private final MarketplaceDTOMapper marketplaceDTOMapper;
 
     @Transactional
     @Override
@@ -111,6 +120,7 @@ public class ArtworkServiceImpl implements ArtworkService {
                 .chain(artworkRequest.getChain())
                 .minted_date(artworkRequest.getMint_date())
                 .supply(artworkRequest.getSupply())
+                .tokenAddress(artworkRequest.getTokenAddress())
                 .status(SystemConstant.STATUS_NFT_NO_ACTIVE)
                 .createdDate(new Date())
                 .lastModifiedDate(new Date())
@@ -139,32 +149,99 @@ public class ArtworkServiceImpl implements ArtworkService {
 
     }
 
+    @Transactional
     @Override
-    public ArtworkResponse findArtworkByWalletAddress(String walletAddress) {
-        List<Artwork> artwork = artworkRepo.findArtworkByWalletAddress(walletAddress)
-                .orElseThrow(() -> new ResourceNotFoundException("Not found artwork with walletAddress "+walletAddress));;
+    public void buyNFT(ArtworkBuyRequest request) {
 
-        List<Owner> owners = ownerRepo.findListOwnerByWalletAddress(walletAddress)
-                .orElseThrow(() -> new ResourceNotFoundException(("Not Found Find owner with wallet address "+walletAddress)));
+        Artist artist = artistService.findArtistById(request.getId_artist());
 
-        List<Artist> artistList = new ArrayList<>();
+        Owner updateOwner = Owner.builder()
+                .artist(artist)
+                .wallet_address(request.getBuyer_address())
+                .status(true)
+                .build();
 
-        for(Owner owner: owners){
-            Artist artist = artistRepo.findById(owner.artist.getId())
-                    .orElseThrow(() -> new ResourceNotFoundException("Not found artist with id "+owner.artist.getId()));
-            artistList.add(artist);
+        Boolean ownerExists = ownerRepo.existsOwnerByIdArtistAndWalletAddress(request.getId_artist(),request.getBuyer_address());
+
+        Owner owner;
+        if(!ownerExists){
+            owner = ownerRepo.save(updateOwner);
+        }else{
+            owner = ownerRepo.findOwnerByIdArtistAndWalletAddress(request.getId_artist(),request.getBuyer_address()).get();
         }
 
+        Artwork artwork = Artwork.builder()
+                .owner(owner)
+                .wallet_address(request.getBuyer_address())
+                .name(request.getName())
+                .symbol(request.getSymbolNFT())
+                .description(request.getDescription())
+                .image_url(request.getImage_url())
+                .tokenAddress(request.getTokenAddress())
+                .chain(request.getChain())
+                .status(SystemConstant.STATUS_NFT_ACTIVE)
+                .createdDate(new Date())
+                .createdBy(request.getBuyer_address())
+                .lastModifiedDate(new Date())
+                .lastModifiedBy(request.getBuyer_address())
+                .build();
+
+        Artwork artCreate = artworkRepo.save(artwork);
+
+        TransactionType creatorTransactionType = transactionTypeService.getTransactionTypeByType("Buyer");
+
+        Transaction transaction = Transaction.builder()
+                .artwork(artCreate)
+                .transactionType(creatorTransactionType)
+                .signature(request.getSignature())
+                .amount(request.getAmount())
+                .price(request.getPrice())
+                .seller_wallet_address(request.getSeller_address())
+                .buyer_wallet_address(request.getBuyer_address())
+                .build();
+
+        transactionService.createTransaction(transaction);
+    }
+
+    @Override
+    public ArtworkResponse findArtworkByWalletAddress(String walletAddress) {
+        List<Artwork> artworks = artworkRepo.findArtworkByWalletAddress(walletAddress)
+                .orElseThrow(() -> new ResourceNotFoundException("Not found artwork with walletAddress " + walletAddress));
+
+        // Fetch artists and owners for fetched artworks
+        Map<UUID, Artist> artistMap = new HashMap<>();
+        Map<UUID, Owner> ownerMap = new HashMap<>();
+        for (Artwork artwork : artworks) {
+            // Fetch artist if not already fetched
+            UUID artistId = artwork.getOwner().getArtist().getId();
+            if (!artistMap.containsKey(artistId)) {
+                Artist artist = artistRepo.findById(artistId)
+                        .orElseThrow(() -> new ResourceNotFoundException("Not found artist with id " + artistId));
+                artistMap.put(artistId, artist);
+            }
+
+            // Fetch owner if not already fetched
+            UUID ownerId = artwork.getOwner().getId();
+            if (!ownerMap.containsKey(ownerId)) {
+                Owner owner = ownerRepo.findById(ownerId)
+                        .orElseThrow(() -> new ResourceNotFoundException("Not found owner with id " + ownerId));
+                ownerMap.put(ownerId, owner);
+            }
+        }
+
+        // Map artworks to DTOs using fetched artists and owners
+        List<ArtworkDTO> artworkDTOList = mapToListArtworkDTO(artworks, new ArrayList<>(artistMap.values()), new ArrayList<>(ownerMap.values()));
+
         return ArtworkResponse.builder()
-                .listResult(mapToListArtworkDTO(artwork, artistList)
-                                .stream()
-                                .toList())
-                                .build();
+                .listResult(artworkDTOList)
+                .build();
     }
 
     @Override
     public ArtworkResponse findArtworkByWalletAddressAndByCondition(ArtworkArtistRequest request) {
         List<Artist> artists = new ArrayList<>();
+
+        List<Owner> owners = new ArrayList<>();
 
         Artist artist = artistRepo.findArtistBySymbol(request.getSymbol())
                     .orElseThrow(() -> new ResourceNotFoundException("Not found artist with symbol "+request.getSymbol()));
@@ -173,11 +250,12 @@ public class ArtworkServiceImpl implements ArtworkService {
         Owner owner = ownerRepo.findOwnerByIdArtistAndWalletAddress(artist.getId(),request.getWalletAddress())
                 .orElseThrow(() -> new ResourceNotFoundException("Not found owner with id artist "+artist.getId()));
 
+        owners.add(owner);
         List<Artwork> artworks = artworkRepo.findArtworkByOwner(owner)
                 .orElseThrow(() -> new ResourceNotFoundException("Not found artwork with id owner "+owner.getId()));
 
         return ArtworkResponse.builder()
-                .listResult(mapToListArtworkDTO(artworks, artists)
+                .listResult(mapToListArtworkDTO(artworks, artists,owners)
                         .stream()
                         .toList())
                 .build();
@@ -253,25 +331,40 @@ public class ArtworkServiceImpl implements ArtworkService {
                 .build();
     }
 
-    private List<ArtworkDTO> mapToListArtworkDTO(List<Artwork> artworks, List<Artist> artists) {
-        List<ArtworkDTO> artworkDTOList = new ArrayList<>();
-
-        for(Artist artist: artists){
-            for(Artwork artwork: artworks){
-                ArtworkDTO artworkDTO = mapToArtworkDTO(artwork, artist.getId());
-                artworkDTOList.add(artworkDTO);
-            }
+    private List<ArtworkDTO> mapToListArtworkDTO(List<Artwork> artworks, List<Artist> artists, List<Owner> owners) {
+        Map<UUID, List<OwnerDTO>> ownersByArtistId = new HashMap<>();
+        for (Owner owner : owners) {
+            UUID artistId = owner.getArtist().getId();
+            ownersByArtistId.computeIfAbsent(artistId, k -> new ArrayList<>()).add(mapToOwnerDTO(owner));
         }
 
+        List<ArtworkDTO> artworkDTOList = new ArrayList<>();
+        for (Artwork artwork : artworks) {
+            UUID artistId = artwork.getOwner().getArtist().getId();
+            List<OwnerDTO> ownerDTOs = ownersByArtistId.get(artistId);
+            Artist artist = getArtistById(artists, artistId);
+            artworkDTOList.add(mapToArtworkDTO(artwork, artist, ownerDTOs));
+        }
         return artworkDTOList;
     }
 
-    private ArtworkDTO mapToArtworkDTO(Artwork artwork, UUID id) {
-        List<OwnerDTO> owners = ownerService.findAllOwnerByIdArtist(id);
+    private Artist getArtistById(List<Artist> artists, UUID artistId) {
+        return artists.stream()
+                .filter(artist -> artist.getId().equals(artistId))
+                .findFirst()
+                .orElseThrow(() -> new ResourceNotFoundException("Not found artist with id " + artistId));
+    }
 
-        Artist artist = artistService.findArtistById(id);
+    private OwnerDTO mapToOwnerDTO(Owner owner) {
+        return ownerDTOMapper.apply(owner);
+    }
 
+    private ArtworkDTO mapToArtworkDTO(Artwork artwork, Artist artist, List<OwnerDTO> owners) {
         Transaction transaction = transactionService.findTransactionByArtworkId(artwork.getId());
+
+        Marketplace marketplace = marketplaceRepo.findMarketplaceByCreatorAddress(artwork.getWallet_address())
+                .orElse(null);
+
         List<Attribute> attributes = attributeRepo.findAllAttributeByIdArtwork(artwork.getId())
                 .orElseThrow(() -> new ResourceNotFoundException("Not find attributes with artwork ID " + artwork.getId()));
 
@@ -284,6 +377,7 @@ public class ArtworkServiceImpl implements ArtworkService {
                 .description(artwork.getDescription())
                 .image_url(artwork.getImage_url())
                 .wallet_address(artwork.getWallet_address())
+                .tokenAddress(artwork.getTokenAddress())
                 .chain(artwork.getChain())
                 .price(artwork.getPrice())
                 .supply(artwork.getSupply())
@@ -292,30 +386,40 @@ public class ArtworkServiceImpl implements ArtworkService {
                 .minted_date(artwork.getMinted_date())
                 .status(artwork.getStatus())
                 .artist(artistDTOMapper.apply(artist))
+                .listedDate(artwork.getListedDate())
+                .listState(artwork.getListState())
                 .owner(owners)
                 .transaction(transactionDTOMapper.apply(transaction))
+                .marketplace(marketplace != null ? marketplaceDTOMapper.apply(marketplace) : null)
                 .attributes(attributeDTOMapper.apply(attributes))
                 .favoriteArtWorks(favoriteArtWorks)
                 .build();
+    }
+
+    private ArtworkDTO mapToArtworkDTO(Artwork artwork, UUID id) {
+        List<OwnerDTO> owners = ownerService.findAllOwnerByIdArtist(id);
+        Artist artist = artistService.findArtistById(id);
+        return mapToArtworkDTO(artwork, artist, owners);
     }
 
     @Override
     public ArtworkTransactionAttributeDTO findArtworkByIdAndEmail(Integer id, String email) {
         Artwork artwork = artworkRepo.findArtworkByIdAndEmail(id,email)
                 .orElseThrow(() -> new ResourceNotFoundException("Not find artwork with id"+id));
-        ArtworkDTO artworkDTO = artworkDTOMapper.apply(artwork);
 
         Transaction transaction = transactionService.findTransactionByArtworkId(id);
-        TransactionDTO transactionDTO = transactionDTOMapper.apply(transaction);
+
+        Marketplace marketplace = marketplaceRepo.findMarketplaceByCreatorAddress(artwork.getWallet_address())
+                .orElse(null);
 
         List<Attribute> attributes = attributeRepo.findAllAttributeByIdArtwork(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Not find attribute with id artwork"+id));
-        List<AttributeDTO> attributesDTO = attributeDTOMapper.apply(attributes);
 
         return ArtworkTransactionAttributeDTO.builder()
-                .artwork(artworkDTO)
-                .transaction(transactionDTO)
-                .attributes(attributesDTO)
+                .artwork(artworkDTOMapper.apply(artwork))
+                .transaction(transactionDTOMapper.apply(transaction))
+                .attributes(attributeDTOMapper.apply(attributes))
+                .marketplace(marketplace != null ? marketplaceDTOMapper.apply(marketplace) : null)
                 .build();
     }
 
@@ -372,7 +476,15 @@ public class ArtworkServiceImpl implements ArtworkService {
         if (artwork.getStatus() != null) {
             artworkUpdate.setStatus(artwork.getStatus());
         }
+        if(artwork.getListedDate() != null){
+            artworkUpdate.setListedDate(artwork.getListedDate());
+        }
+        if(artwork.getListState() != null){
+            artworkUpdate.setListState(artwork.getListState());
+        }
 
         artworkRepo.save(artworkUpdate);
     }
+
+
 }

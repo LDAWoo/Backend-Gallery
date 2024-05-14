@@ -3,6 +3,7 @@ package com.example.gardenedennft.artwork.entity;
 import com.example.gardenedennft.attribute.entity.Attribute;
 import com.example.gardenedennft.category.Category;
 import com.example.gardenedennft.favoriteartwork.entity.FavoriteArtwork;
+import com.example.gardenedennft.marketplace.entity.Marketplace;
 import com.example.gardenedennft.owner.entity.Owner;
 import com.example.gardenedennft.transaction.Transaction;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -41,6 +42,7 @@ public class Artwork implements Serializable {
     private String description;
     private String image_url;
     private String wallet_address;
+    private String tokenAddress;
     private String chain;
     private Double price;
     private Double lastPrice;
@@ -50,6 +52,8 @@ public class Artwork implements Serializable {
     private Date minted_date;
     private Integer view_count;
     private Integer status;
+    private Date listedDate;
+    private String listState;
 
     @JsonIgnore
     @ManyToMany
@@ -61,12 +65,17 @@ public class Artwork implements Serializable {
 
     @JsonIgnore
     @ManyToOne
-    @JoinColumn(name = "_id_artwork")
+    @JoinColumn(name = "_id_owner")
     private Owner owner;
 
     @JsonIgnore
     @OneToMany(mappedBy = "artwork", fetch = FetchType.LAZY)
     private List<Transaction> transactions;
+
+    @JsonIgnore
+    @ManyToOne
+    @JoinColumn(name = "_id_marketplace")
+    private Marketplace marketplace;
 
     @JsonIgnore
     @OneToMany(mappedBy = "artwork", fetch = FetchType.LAZY)

@@ -24,7 +24,6 @@ public class ArtworkListDTOMapper implements Function<List<Artwork>, List<Artwor
     }
 
     private ArtworkDTO mapToDTO (Artwork artwork){
-        ArtworkDTO artworkDTO = artworkDTOMapper.apply(artwork);
-        return artworkDTO;
+        return artworkDTOMapper.apply(artwork);
     }
 }

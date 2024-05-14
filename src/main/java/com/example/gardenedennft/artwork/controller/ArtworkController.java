@@ -1,6 +1,7 @@
 package com.example.gardenedennft.artwork.controller;
 
 import com.example.gardenedennft.artwork.entity.request.ArtworkArtistRequest;
+import com.example.gardenedennft.artwork.entity.request.ArtworkBuyRequest;
 import com.example.gardenedennft.artwork.service.ArtworkService;
 import com.example.gardenedennft.artwork.entity.request.ArtworkTransactionRequest;
 import com.example.gardenedennft.artwork.entity.Artwork;
@@ -34,6 +35,12 @@ public class ArtworkController {
                 artworkTransactionRequest.getArtworkRequest(),
                 artworkTransactionRequest.getTransactionRequest(),
                 artworkTransactionRequest.getCategoryIds());
+        return new ResponseEntity<>(HttpStatus.CREATED);
+    }
+
+    @PostMapping("/buy-artwork")
+    public ResponseEntity<?> buyArtWork(@RequestBody ArtworkBuyRequest request){
+        artworkService.buyNFT(request);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 

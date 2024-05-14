@@ -10,7 +10,7 @@ import java.util.UUID;
 
 public interface OwnerService {
     Owner findOwnerById(UUID id);
-    OwnerDTO findOwnerByWalletAddress(String walletAddress);
+    List<OwnerDTO> findOwnerByWalletAddress(String walletAddress);
     void updateOwner(Owner owner);
     OwnerDTO findOwnerByIdArtwork(UUID id);
     List<OwnerDTO> findAllOwnerByIdArtist(UUID id);

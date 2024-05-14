@@ -12,6 +12,7 @@ import com.example.gardenedennft.artist.mapper.ArtistDTOMapper;
 import com.example.gardenedennft.artist.mapper.ArtistOwnerDTOMapper;
 import com.example.gardenedennft.artist.service.ArtistService;
 import com.example.gardenedennft.artwork.dto.ArtworkDTO;
+import com.example.gardenedennft.artwork.entity.Artwork;
 import com.example.gardenedennft.artwork.mapper.ArtworkListDTOMapper;
 import com.example.gardenedennft.artwork.repo.ArtworkRepo;
 import com.example.gardenedennft.confirmationtoken.ConfirmationToken;
@@ -115,7 +116,7 @@ public class ArtistServiceImpl implements ArtistService {
     @Override
     public void artistSignIn(ArtistAuthenticationRequest request) {
         String email = request.getEmail();
-        Artist artist = findArtistByEmail(email);
+
 
         if(!checkEmail(email)) {
             Artist artistSave = artistRepo.save(Artist.builder()
@@ -129,8 +130,8 @@ public class ArtistServiceImpl implements ArtistService {
                             .build();
             ownerResponse.save(owner);
         }else{
+            Artist artist = findArtistByEmail(email);
             Boolean ownerExists = ownerResponse.existsOwnerByWalletAddress(request.getWalletAddress());
-
             if(!ownerExists){
                 Owner owner = Owner.builder()
                         .artist(artist)
@@ -140,6 +141,7 @@ public class ArtistServiceImpl implements ArtistService {
                 ownerResponse.save(owner);
             }
         }
+        Artist artist = findArtistByEmail(email);
 
         String tokenConfirm = String.valueOf(UUID.randomUUID());
 
@@ -241,9 +243,18 @@ public class ArtistServiceImpl implements ArtistService {
 
     @Override
     public ArtistResponse findAll() {
+        List<Artist> allArtists = artistRepo.findAll();
+        List<Artist> trendingArtists = new ArrayList<>();
+
+        for (Artist artist : allArtists) {
+            if (!hasArtwork(artist.getId()) && hasArtist(artist.getName())) {
+                trendingArtists.add(artist);
+            }
+        }
+
         return ArtistResponse.builder()
                 .listResult(
-                        artistRepo.findAll()
+                        trendingArtists
                                 .stream()
                                 .map(artistDTOMapper)
                                 .toList()
@@ -253,11 +264,17 @@ public class ArtistServiceImpl implements ArtistService {
     @Override
     public ArtistResponse findAllArtistsByTrending() {
         List<Artist> allArtists = artistRepo.findAll();
+        List<Artist> trendingArtists = new ArrayList<>();
 
-        List<ArtistDTO> trendingArtists = getAllListArtist(allArtists);
+        for (Artist artist : allArtists) {
+            if (!hasArtwork(artist.getId()) && hasArtist(artist.getSymbol())) {
+                trendingArtists.add(artist);
+            }
+        }
 
+        List<ArtistDTO> trendingArtistsDTO = getAllListArtist(trendingArtists);
         return ArtistResponse.builder()
-                .listResult(trendingArtists)
+                .listResult(trendingArtistsDTO)
                 .build();
     }
 
@@ -269,23 +286,36 @@ public class ArtistServiceImpl implements ArtistService {
         List<Artist> artistList = new ArrayList<>();
 
         for (ArtistSqlNativeResult splNative : results) {
-            Artist artist = new Artist();
-            artist.setId(splNative.getId());
-            artist.setName(splNative.getName());
-            artist.setImage_url(splNative.getImage_url());
-            artist.setSymbol(splNative.getSymbol());
-            artist.setDiscord_url(splNative.getDiscord_url());
-            artist.setEmail(splNative.getEmail());
-            artist.setTwitter_url(splNative.getTwitter_url());
-            artist.setBio(splNative.getBio());
-            artist.setTelegram_url(splNative.getTelegram_url());
-            artistList.add(artist);
+                UUID id = splNative.getId();
+                if(!hasArtwork(id) && hasArtist(splNative.getSymbol())) {
+                    Artist artist = new Artist();
+                    artist.setId(splNative.getId());
+                    artist.setName(splNative.getName());
+                    artist.setImage_url(splNative.getImage_url());
+                    artist.setSymbol(splNative.getSymbol());
+                    artist.setDiscord_url(splNative.getDiscord_url());
+                    artist.setEmail(splNative.getEmail());
+                    artist.setTwitter_url(splNative.getTwitter_url());
+                    artist.setBio(splNative.getBio());
+                    artist.setTelegram_url(splNative.getTelegram_url());
+                    artistList.add(artist);
+                }
         }
 
         List<ArtistDTO> trendingArtists = getAllListArtist(artistList);
         return ArtistResponse.builder()
                 .listResult(trendingArtists)
                 .build();
+    }
+
+    private boolean hasArtwork(UUID artistId) {
+        return artworkRepo.findArtworkByIdArtistAndStatus(artistId, SystemConstant.STATUS_NFT_ACTIVE)
+                .map(List::isEmpty)
+                .orElse(true);
+    }
+
+    private boolean hasArtist(String symbol) {
+        return symbol != null;
     }
 
     private List<ArtistDTO> getAllListArtist (List<Artist> artists){

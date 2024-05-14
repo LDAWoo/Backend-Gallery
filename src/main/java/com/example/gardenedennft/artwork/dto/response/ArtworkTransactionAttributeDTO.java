@@ -2,6 +2,7 @@ package com.example.gardenedennft.artwork.dto.response;
 
 import com.example.gardenedennft.artwork.dto.ArtworkDTO;
 import com.example.gardenedennft.attribute.dto.AttributeDTO;
+import com.example.gardenedennft.marketplace.dto.MarketplaceDTO;
 import com.example.gardenedennft.transaction.TransactionDTO;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -17,6 +18,7 @@ import java.util.List;
 public class ArtworkTransactionAttributeDTO {
     private ArtworkDTO artwork;
     private TransactionDTO transaction;
+    private MarketplaceDTO marketplace;
     private List<AttributeDTO> attributes;
 }
 

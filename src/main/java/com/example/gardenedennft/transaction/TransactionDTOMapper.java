@@ -11,7 +11,7 @@ public class TransactionDTOMapper implements Function<Transaction , TransactionD
 
     @Override
     public TransactionDTO apply(Transaction transaction) {
-        TransactionDTO transactionDTO = TransactionDTO.builder()
+        return TransactionDTO.builder()
                 .id(transaction.getId())
                 .signature(transaction.getSignature())
                 .amount(transaction.getAmount())
@@ -20,6 +20,5 @@ public class TransactionDTOMapper implements Function<Transaction , TransactionD
                 .seller_wallet_address(transaction.getSeller_wallet_address())
                 .fee(transaction.getFee())
                 .build();
-        return transactionDTO;
     }
 }

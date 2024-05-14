@@ -44,15 +44,15 @@ public class OwnerServiceImpl implements OwnerService {
     }
 
     @Override
-    public OwnerDTO findOwnerByWalletAddress(String walletAddress) {
-        Owner owner = ownerRepo.findOwnerByWalletAddress(walletAddress)
-                .orElseThrow(() -> new ResourceNotFoundException("Owner not  with wallet_address "+walletAddress));
-        return ownerDTOMapper.apply(owner);
+    public List<OwnerDTO> findOwnerByWalletAddress(String walletAddress) {
+        List<Owner> owners = ownerRepo.findOwnerByWalletAddress(walletAddress)
+                .orElseThrow(() -> new ResourceNotFoundException("Owner not with wallet_address "+walletAddress));
+        return ownerListDTOMapper.apply(owners);
     }
 
     @Override
     public void updateOwner(Owner owner) {
-        ownerRepo.findOwnerByWalletAddress(owner.getWallet_address()).ifPresent(existingOwner -> {
+        ownerRepo.findById(owner.getId()).ifPresent(existingOwner -> {
             Field[] fields = Owner.class.getDeclaredFields();
 
             for (Field field: fields) {

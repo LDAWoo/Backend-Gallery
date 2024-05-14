@@ -1,6 +1,7 @@
 package com.example.gardenedennft.owner.repo;
 
 import com.example.gardenedennft.artist.entity.Artist;
+import com.example.gardenedennft.artwork.entity.Artwork;
 import com.example.gardenedennft.owner.entity.Owner;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -20,9 +21,15 @@ public interface OwnerRepo extends JpaRepository<Owner, UUID> {
 
     @Transactional
     @Query("""
-    SELECT o FROM Owner o WHERE  o.wallet_address = ?1 
+    SELECT o FROM Owner o WHERE o.id = ?1 AND o.wallet_address = ?2
     """)
-    Optional<Owner> findOwnerByWalletAddress(String walletAddress);
+    Optional<Owner> findOwnerByIdAndWalletAddress(UUID id, String walletAddress);
+
+    @Transactional
+    @Query("""
+    SELECT o FROM Owner o WHERE o.wallet_address = ?1
+    """)
+    Optional<List<Owner>> findOwnerByWalletAddress(String walletAddress);
 
     @Transactional
     @Query("""

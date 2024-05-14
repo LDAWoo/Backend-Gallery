@@ -2,6 +2,7 @@ package com.example.gardenedennft.transaction;
 
 import com.example.gardenedennft.TransactionType.TransactionType;
 import com.example.gardenedennft.artwork.entity.Artwork;
+import com.example.gardenedennft.marketplace.entity.Marketplace;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -26,6 +27,7 @@ public class Transaction implements Serializable {
     private Double amount;
     private String buyer_wallet_address;
     private String seller_wallet_address;
+    private Double price;
     private Double fee;
     private Double royalty_amount;
     @ManyToOne
@@ -34,4 +36,7 @@ public class Transaction implements Serializable {
     @ManyToOne
     @JoinColumn(name = "id_artwork")
     private Artwork artwork;
+    @ManyToOne
+    @JoinColumn(name = "id_marketplace")
+    private Marketplace marketplace;
 }
